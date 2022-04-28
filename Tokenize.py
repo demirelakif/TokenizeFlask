@@ -8,7 +8,7 @@ from jpype import JClass, JString, getDefaultJVMPath, shutdownJVM, startJVM, jav
 
 data = pd.read_csv("test.csv",sep=",")
 # zemberek-full jar dosyasını C:/Users/kullanici-adi dosya yoluna koyun
-ZEMBEREK_PATH = r'zemberek-full.jar' # alttakina göre uyarla
+ZEMBEREK_PATH = r'C:\Users\Kivanc\zemberek-full.jar' # alttakina göre uyarla
 #ZEMBEREK_PATH = r'C:\Users\<your-user-name>\zemberek-full.jar'
 startJVM(getDefaultJVMPath(), '-ea', '-Djava.class.path=%s' % (ZEMBEREK_PATH))
 

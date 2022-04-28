@@ -5,26 +5,73 @@
     <h3>Anasayfa</h3>
     <hr>
     <div class="jumbotron">
-        <h5 align="Center">Kelime girişi yapın</h5>
+        <div class="alert alert-success" role="alert">
+    <h4 align="center" class="alert-heading">NLP Zemberek tool</h4>
+    <p align="center">Arama çubuğuna ilgili kelimeyi yazdığınızda size alternatif sonuçları döndürür</p>
+    <hr>
+    <p align="center" class="mb-0">Zemberek Tokenizer...........</p>
+</div>
         <br>
-        <form method="POST" action="/" align="Center">
+         <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <div class="container-fluid">
+            <a class="navbar-brand"><strong>NLP TOOL</strong></a>
+        <form method="POST" action="/" class="d-flex">
             {{ form.csrf_token }}
             {{ form.name(size=20) }}
-            <input type="submit" class="btn btn-success" value="Giriş">
+        <button class="btn btn-outline-success" type="submit">Ara</button>
         </form>
+  </div>
+</nav>
 
         <hr>
 
        {% if data and result %}
            {% for item in data %}
-               <ul> <li>{{item}} ------------->{{result[loop.index0][0][0]}}
                      
-                {% if result[loop.index0][1][0] %}
-                <b>Diğer Tahminler:</b>
-                {{result[loop.index0][1][0]}},
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        {{item}} (ilk tahmin)
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>{{result[loop.index0][0][0]}}</strong>
+      </div>
+    </div>
+  </div>
+   {% if result[loop.index0][1][0] %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        {{item}} (ikinci tahmin)
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>{{result[loop.index0][1][0]}}</strong>
+      </div>
+    </div>
+  </div>
+  {% if result[loop.index0][2][0] %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+       {{item}} (üçüncü tahmin)
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong> {{result[loop.index0][2][0]}}</strong>
+      </div>
+    </div>
+  </div>
+</div>
 
-                {% if result[loop.index0][2][0] %}
-                {{result[loop.index0][2][0]}}
+
+
+             
                 {% endif %}
 
                {% endif %}</li> </ul>
