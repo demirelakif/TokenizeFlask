@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <h3 align="Center">Veri Ekle bölümü</h3>
+    <hr>
+    <div class="mb-3" align = "center">
+    <form method="POST">
+        <label for="exampleFormControlInput1" class="form-label">Key</label>
+        <input name="urun" class="form-control" style="width: 50%" id="exampleFormControlInput1" required>
+        <br>
+        <label for="exampleFormControlInput1" class="form-label">Tag</label>
+        <!-- <input type="email" class="form-control" style="width: 50%" id="exampleFormControlInput1"> -->
+        <select name="tag_select" class="form-select" aria-label="select example" style="width: 50%;">
+            <option value="">Boş Tag</option>
+            <option value="Ürün">Ürün</option>
+            <option value="Market">Market</option>
+            <option value="Para Birimi">Para Birimi</option>
+            <option value="Miktar Birimi">Miktar Birimi</option>
+          </select>
+          <br>
+        <label for="exampleFormControlInput1" class="form-label">Category</label>
+        <select name="category_select" class="form-select" aria-label="select example" style="width: 50%;">
+          <option value="">Boş Kategori</option>
+          <option value="Meyve-Sebze">Meyve-Sebze</option>
+          <option value="Et-Tavuk-Balık">Et-Tavuk-Balık</option>
+          <option value="Süt-Süt Ürünleri">Süt-Süt Ürünleri</option>
+          <option value="Baklagil">Baklagil</option>
+          <option value="Tahıl">Tahıl</option>
+          <option value="Baklagil">Baklagil</option>
+        </select>
+        <br>
+        <label for="exampleFormControlInput1" class="form-label">Description</label>
+        <input name="description" class="form-control" style="width: 50%" id="exampleFormControlInput1" required>
+        <br>
+        <button align="right" type="submit" class="btn btn-primary">Save</button>
+
+    </form>
+      </div>
+     
+    </div>
+    
+{% endblock %}
