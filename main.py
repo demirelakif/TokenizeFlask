@@ -1,19 +1,32 @@
 from flask import Flask,render_template,request
 from flask_wtf import FlaskForm
 from pandas import value_counts
+from sqlalchemy import true
 from wtforms.validators import DataRequired
 from wtforms import StringField
 import os
 import Tokenize
 import csv
 import pandas as pd
+import pymongo
+from flask import Flask, session
+import sys
+from passlib.hash import sha256_crypt
 
+client = pymongo.MongoClient("mongodb+srv://crowd:crowd@cluster0.bn20y.mongodb.net/?retryWrites=true&w=majority")
+db = client["Crowdsourcing"]
+collection = db.users
 
 class dataForm(FlaskForm):
     name = StringField('data', validators=[DataRequired()])
 
 
 app = Flask(__name__)
+
+SESSION_TYPE = 'redis'
+app.config.from_object(__name__)
+
+
 data = []
 result = []
 SECRET_KEY = os.urandom(32)
@@ -28,6 +41,45 @@ def index():
         return render_template("index.html",form = form,data=data ,result=result)
 
     return render_template("index.html",form = form,data=data,result=result)
+
+
+@app.route("/register",methods=['GET', 'POST'])
+def register():
+    if request.method=="POST":
+
+        username = request.form.get.username
+        password = sha256_crypt.encrypt(request.form.get.password)
+        mydict = { "username": username, "password": password }
+        collection.insert_one(mydict)
+        return("<h1>success</h1>")
+
+
+
+    return render_template("register.html")
+
+@app.route("/login",methods=['GET', 'POST'])
+def login():
+    if request.method == "POST":
+        username = request.form.get.username
+        password = request.form.get.username
+        
+        user = collection.find_one({"username":username,"password": password})
+        if sha256_crypt.verify(password,user["password"]):
+            session["logged_in"]=True
+            session["username"]= user["username"]
+        
+        else:
+            #password yanlışsa
+            pass
+    if request.method == "GET":
+        return render_template("login.html")
+
+    #return render_template("login.html")
+
+        
+        
+
+    
 
 @app.route("/about")
 def about():
