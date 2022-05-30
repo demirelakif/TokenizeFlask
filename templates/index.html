@@ -3,6 +3,11 @@
 
 {% block body %} 
     <h3>Anasayfa</h3>
+    <br>
+    {% if session["logged_in"] %}
+    <h5>Hoşgeldin {{session["username"]}}</h5>
+    {% endif %}
+    
     <hr>
     <div class="jumbotron">
         <div class="alert alert-success" role="alert">

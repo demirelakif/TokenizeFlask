@@ -1,7 +1,6 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,redirect
 from flask_wtf import FlaskForm
 from pandas import value_counts
-from sqlalchemy import true
 from wtforms.validators import DataRequired
 from wtforms import StringField
 import os
@@ -12,25 +11,30 @@ import pymongo
 from flask import Flask, session
 import sys
 from passlib.hash import sha256_crypt
-
-client = pymongo.MongoClient("mongodb+srv://crowd:crowd@cluster0.bn20y.mongodb.net/?retryWrites=true&w=majority")
-db = client["Crowdsourcing"]
-collection = db.users
+from flask_mongoengine import MongoEngine
+from db_classes import User
 
 class dataForm(FlaskForm):
     name = StringField('data', validators=[DataRequired()])
 
 
-app = Flask(__name__)
-
+DB_URI = "mongodb+srv://crowd:crowd@cluster0.bn20y.mongodb.net/?retryWrites=true&w=majority"
 SESSION_TYPE = 'redis'
+
+app = Flask(__name__)
 app.config.from_object(__name__)
+app.config["MONGODB_HOST"] = DB_URI
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
+
+db = MongoEngine()
+db.init_app(app)
+
 
 
 data = []
 result = []
-SECRET_KEY = os.urandom(32)
-app.config['SECRET_KEY'] = SECRET_KEY
+
 
 @app.route("/",methods=['GET', 'POST'])
 def index():
@@ -47,12 +51,14 @@ def index():
 def register():
     if request.method=="POST":
 
-        username = request.form.get.username
-        password = sha256_crypt.encrypt(request.form.get.password)
-        mydict = { "username": username, "password": password }
-        collection.insert_one(mydict)
-        return("<h1>success</h1>")
-
+        username = request.form.get("username")
+        password = sha256_crypt.encrypt(request.form.get("password"))
+        try : 
+            user = User(username=username,password=password)
+            user.save()
+            return redirect("/login")
+        except Exception as e:
+            return("<h1>"+str(e)+"</h1>")
 
 
     return render_template("register.html")
@@ -60,19 +66,20 @@ def register():
 @app.route("/login",methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        username = request.form.get.username
-        password = request.form.get.username
+        username = request.form.get("username")
+        password = request.form.get("password")
         
-        user = collection.find_one({"username":username,"password": password})
+        user = User.objects.get(username=username)
         if sha256_crypt.verify(password,user["password"]):
             session["logged_in"]=True
             session["username"]= user["username"]
+            return redirect("/")
         
         else:
             #password yanlışsa
-            pass
-    if request.method == "GET":
-        return render_template("login.html")
+            return("<h1>passwords are missmatch </h1>")
+    
+    return render_template("login.html")
 
     #return render_template("login.html")
 
